@@ -63,6 +63,7 @@ class Ajax extends CI_Controller {
                         'option'        =>  $option,
                         'prepaidData'   =>  $datosArray
                     );
+
                     echo $this->load->view('ajax/loadtableprepaidsAll', $data, true);
         }else{
             if($option!='range'){
@@ -87,6 +88,7 @@ class Ajax extends CI_Controller {
                 'option'        =>  $option,
                 'prepaidData'   =>  $prepaidArray
             );
+
             echo $this->load->view('ajax/loadtableprepaids', $data, true);
         }
     }
@@ -96,5 +98,4 @@ class Ajax extends CI_Controller {
         $data['customer'] = $customer;
         echo $this->load->view('ajax/loadhourdetail', $data, true);
     }
-    
 }

@@ -51,7 +51,7 @@
                     ?>
                  </td>
                  <td style="width: 120px; text-align: center;">
-                     <button href="#" class="btn btn-info"><i class="fa fa-envelope"></i> Enviar reporte</button>
+                     <button href="#" class="btn btn-success sendreporte" data-customer="<?= $h['id_clientes']; ?>"><i class="fa fa-envelope"></i> Enviar reporte</button>
                  </td>
                  <td style="width: 120px; text-align: center;">
                      <button href="#" class="btn btn-success goToHours" data-customer="<?= $h['id_clientes']; ?>"><i class="fa fa-book"></i> Ver detalle</button>
