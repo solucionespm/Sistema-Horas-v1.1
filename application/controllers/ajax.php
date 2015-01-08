@@ -55,12 +55,18 @@ class Ajax extends CI_Controller {
                 $rangeArray['from'] = $from;
                 $rangeArray['to'] = $to;
             }
+            
+                    /* Se Agrega la Variable showButton necesaria para
+                     * poder condicionar si se muestra o no
+                     * los botones, solo para efectos de prueba
+                     */
                     $data = array(
                         'customer'      =>  'All',
                         'endDate'       =>  $endDate,
                         'range'         =>  $rangeArray,
                         'fecha'         =>  $fecha,
                         'option'        =>  $option,
+                        'showButton'    => 'visible', // Variable de Prueba
                         'prepaidData'   =>  $datosArray
                     );
 
