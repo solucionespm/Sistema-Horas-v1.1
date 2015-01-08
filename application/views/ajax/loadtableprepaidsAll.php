@@ -9,7 +9,7 @@
             </tr>
          </thead>
          <tbody class="tasksList">
-             <?php
+             <?php                
                 $balance = 0;
                 foreach($prepaidData as $h){
              ?>
@@ -50,12 +50,13 @@
                         echo $hours . ':' . $minutes;
                     ?>
                  </td>
-                 <td style="width: 120px; text-align: center;">
-                     <button href="#" class="btn btn-success sendreporte" data-customer="<?= $h['id_clientes']; ?>"><i class="fa fa-envelope"></i> Enviar reporte</button>
-                 </td>
-                 <td style="width: 120px; text-align: center;">
-                     <button href="#" class="btn btn-success goToHours" data-customer="<?= $h['id_clientes']; ?>"><i class="fa fa-book"></i> Ver detalle</button>
-                 </td>
+                    <!-- Se agrego el atributo visibility como parametro showButton para efectos de prueba -->
+                    <td id="viewtd" style="width: 120px; text-align: center; visibility: <?=$showButton ?>;">
+                        <button href="#" class="btn btn-success sendreporte" data-customer="<?= $h['id_clientes']; ?>"><i class="fa fa-envelope"></i> Enviar reporte</button>
+                    </td>
+                    <td id="viewtd2" style="width: 120px; text-align: center; visibility: <?=$showButton ?>;">
+                        <button href="#" class="btn btn-success goToHours" data-customer="<?= $h['id_clientes']; ?>"><i class="fa fa-book"></i> Ver detalle</button>
+                    </td>
              </tr>
              <?php
                 }
