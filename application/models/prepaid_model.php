@@ -57,4 +57,24 @@ class Prepaid_model extends CI_Model {
                 }
             return array();
     }
+    
+    function get_prepaids_dateNow($client, $year, $month)
+    {
+        $q= $this
+                    ->db
+                    ->select('*')
+                    ->from('prepaid')
+                    ->where('MONTH(fecha_prepaid) =', $month)
+                    ->where('YEAR(fecha_prepaid) =', $year)
+                    //->where('Fecha <=', $nextDate)
+                    ->where_in('id_clientes',$client)
+                    //->or_where('ID_Cliente', 21)
+                    ->where('horas !=', 0)
+                    ->order_by('prepaid.fecha_prepaid', 'asc')
+                    ->get();
+            if($q->num_rows() > 0) {
+                    return $q->result_array();
+                }
+            return array();
+    }
 }
