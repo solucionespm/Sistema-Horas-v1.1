@@ -3,69 +3,41 @@ if(!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 class Mail extends CI_Controller {
-	function __construct(){
-		parent::__construct();
-	}
 
-	function sendreport() {            
+    public function sendreport() {            
             $id = 2; // Id del Customer
-            $datosArray = array();
-            $fecha = date('Y-m-d');
-            $endDate = $fecha . '-01';
-            $endDate = date("Y-m-d", strtotime("$endDate +1 month"));
-            $dateForm = date("Y-m-d");
-            $dataCondi = $this->prepaid_model->get_prepaids($id,$dateForm);            
-            
-            //Condicionamos si posee actividad o no el cliente.
-            $saldo = 0; // Inicializamos el saldo a 0 (NO posee actividad)
-            $rangeArray = array();
-            foreach ($dataCondi as $value) {
-                if(in_array($dateForm, $value)){
-                    $saldo = $saldo + floatval($value['horas']);                   
+            $year = date("Y");
+            $month = date("m");
+
+            // Variables para determinar el saldo positivo o negativo
+            $saldoP = 0;    $saldoN = 0;
+
+            //==================================================================
+            // Consultas a la BD
+            //==================================================================
+
+            $prepaidDateNow = $this->prepaid_model->get_prepaids_dateNow($id, $year, $month);
+            $prepaidArray = $this->clientes_model->get_clientes_single($id);
+
+            foreach ($prepaidDateNow as $value) {
+                if($value['horas'] < 0){
+                    $saldoN = $saldoN + floatval($value['horas']);
+                }else{
+                    $saldoP = $saldoP + floatval($value['horas']);
                 }
             }
-            if($saldo != 0){
-                //Consulta para Obtener los datos del cliente
-                $prepaidArray = $this->clientes_model->get_clientes_single($id);
-                echo 'Posee Actividad' + $saldo;  // Mensaje para efectos de prueba
-                $dataAll = $this->prepaid_model->get_prepaids_all($endDate);
-                
-                foreach ($dataAll as $p) { // Realizamos el ciclo para recorrer los datos del cliente
-                    $temp = array(
-                        'id_prepaid'        =>  $p['id_prepaid'],
-                        'id_clientes'       =>  $p['id_clientes'],
-                        'ultima_fecha'      =>  $p['fecha_prepaid'],
-                        'saldo'             =>  $p['horas'],
-                        'cliente'           =>  $prepaidArray[0]['cliente']                        
-                    );
-                    array_push($datosArray, $temp);
-                }                
-                $data = array(
-                        'customer'      =>  'All',
-                        'endDate'       =>  $endDate,
-                        'range'         =>  $rangeArray,
-                        'fecha'         =>  $fecha,
-                        'option'        =>  '',
-                        'showButton'    => 'hidden', // Necesario para poder condicionar si se muestra o no los botones
-                        'prepaidData'   =>  $datosArray
-                    );
-                echo $this->load->view('ajax/loadtableprepaidsAll', $data, true);                
-            }
-            $prepaidArray = $this->prepaid_model->get_prepaids($id, $endDate);
-            $data = array(
-                    'customer'      =>  'All',
-                    'endDate'       =>  $endDate,
-                    'range'         =>  $rangeArray,
-                    'fecha'         =>  $fecha,
-                    'option'        =>  '',
-                    'showButton'    =>  'hidden', // Necesario para poder condicionar si se muestra o no los botones
-                    'prepaidData'   =>  $prepaidArray
-                );
-
-            echo $this->load->view('ajax/loadtableprepaids', $data, true);
+            $saldoMes = array(
+                'saldoP'     =>  $saldoP, //Saldo positivo por mes
+                'saldoN'     =>  $saldoN, //Saldo negativo por mes
+            );
+            array_push($prepaidDateNow, $saldoMes);
+            var_dump($prepaidDateNow);
             die(); // matamos el proceso para no cargar la parte de mail
 
-            //Comenzamos a cargar el email.
+            //==================================================================
+            // Proceso de carga de datos para el Mail
+            //==================================================================
+
             $this->load->library('email');
             $config['protocol'] = 'sendmail';
             $config['charset'] = 'iso-8859-1';
@@ -73,9 +45,8 @@ class Mail extends CI_Controller {
             $config['mailtype'] = 'html';
 
             $this->email->initialize($config);
-            
-            $dataMail = $this->clientes_model->get_clientes_single($id);
-            foreach ($dataMail as $row) { // Realizamos el ciclo para recorrer los datos del cliente                
+
+            foreach ($prepaidArray as $row) { // Realizamos el ciclo para recorrer los datos del cliente                
                 $this->email->clear(); // Reseteamos todas las variables de email a un estado vacio
                 $this->email->from('hanselcolmenarez@hotmail.com', 'SolucionesPM-Prueba');
                 $this->email->to($row['email_cliente']);
