@@ -21,19 +21,8 @@ class Mail extends CI_Controller {
             $prepaidArray = $this->clientes_model->get_clientes_single($id);
             $balance = $this->prepaid_model->get_prepaids($id, $dateForm);
 
-            foreach ($prepaidDateNow as $value) {
-                if($value['horas'] < 0){
-                    $saldoN = $saldoN + floatval($value['horas']);
-                }else{
-                    $saldoP = $saldoP + floatval($value['horas']);
-                }
-            }
-            $saldoMes = array(
-                'saldoP'     =>  $saldoP, //Saldo positivo por mes
-                'saldoN'     =>  $saldoN, //Saldo negativo por mes
-            );
-            array_push($prepaidDateNow, $saldoMes);
             var_dump($prepaidDateNow);
+            var_dump($balance);
             die(); // matamos el proceso para no cargar la parte de mail
 
             //==================================================================
@@ -48,22 +37,20 @@ class Mail extends CI_Controller {
 
             $this->email->initialize($config);
 
-            foreach ($prepaidArray as $row) { // Realizamos el ciclo para recorrer los datos del cliente                
-                $this->email->clear(); // Reseteamos todas las variables de email a un estado vacio
-                $this->email->from('hanselcolmenarez@hotmail.com', 'SolucionesPM-Prueba');
-                $this->email->to($row['email_cliente']);
-                $this->email->subject('Reporte de Horas');
-                $msg='
-                    <div style="background-color:#CF9E2D; width: 600px; padding:10px; margin:auto; border: 2px solid #3A2919; border-top: 10px solid #3A2919;">
-                    <h1 style="color:#fff; font-weight:bold;">Prueba de Envio de Email Snippet by Orellana</h1>    
-                    <p style="margin-left:10px;color:#fff;">Customer: ' . $row['cliente'] . '</p>
-                    <p style="margin-left:10px;color:#fff;">Email: ' . $row['email_cliente'] . '</p>      
-                    </div>
-                    ';
-                $this->email->message($msg);
-                if ( ! $this->email->send()) {
-                    echo $this->email->print_debugger(); // Cambiar luego por return 'Error';
-                }
+            $this->email->clear(); // Reseteamos todas las variables de email a un estado vacio
+            $this->email->from('hanselcolmenarez@hotmail.com', 'SolucionesPM-Prueba');
+            $this->email->to($row['email_cliente']);
+            $this->email->subject('Reporte de Horas');
+            $msg='
+                <div style="background-color:#CF9E2D; width: 600px; padding:10px; margin:auto; border: 2px solid #3A2919; border-top: 10px solid #3A2919;">
+                <h1 style="color:#fff; font-weight:bold;">Prueba de Envio de Email Snippet by Orellana</h1>    
+                <p style="margin-left:10px;color:#fff;">Customer: ' . $prepaidArray[0]['cliente'] . '</p>
+                <p style="margin-left:10px;color:#fff;">Email: ' . $prepaidArray[0]['email_cliente'] . '</p>      
+                </div>
+            ';
+            $this->email->message($msg);
+            if ( ! $this->email->send()) {
+                echo $this->email->print_debugger(); // Cambiar luego por return 'Error';
             }
 	}
 }
