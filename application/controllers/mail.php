@@ -8,6 +8,7 @@ class Mail extends CI_Controller {
             $id = 2; // Id del Customer
             $year = date("Y");
             $month = date("m");
+            $dateForm = date('Y-m-d');
 
             // Variables para determinar el saldo positivo o negativo
             $saldoP = 0;    $saldoN = 0;
@@ -18,6 +19,7 @@ class Mail extends CI_Controller {
 
             $prepaidDateNow = $this->prepaid_model->get_prepaids_dateNow($id, $year, $month);
             $prepaidArray = $this->clientes_model->get_clientes_single($id);
+            $balance = $this->prepaid_model->get_prepaids($id, $dateForm);
 
             foreach ($prepaidDateNow as $value) {
                 if($value['horas'] < 0){
