@@ -1,34 +1,25 @@
-<?php 
-if(!defined('BASEPATH')) 
-	exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Mail extends CI_Controller {
 
     public function sendreport() {            
             $id = 2; // Id del Customer
-            $year = date("Y");
-            $month = date("m");
-            $dateForm = date('Y-m-d');
-
-            // Variables para determinar el saldo positivo o negativo
-            $saldoP = 0;    $saldoN = 0;
-
+            
             //==================================================================
             // Consultas a la BD
             //==================================================================
-
-            $prepaidDateNow = $this->prepaid_model->get_prepaids_dateNow($id, $year, $month);
-            $prepaidArray = $this->clientes_model->get_clientes_single($id);
-            $balance = $this->prepaid_model->get_prepaids($id, $dateForm);
+            $prepaidDateNow = $this->prepaid_model->get_prepaids_dateNow($id, date("Y"), date("m"));
+            $clienteArray = $this->clientes_model->get_clientes_single($id);
+            $balance = $this->prepaid_model->get_prepaids($id, date('Y-m-d'));
 
             var_dump($prepaidDateNow);
             var_dump($balance);
+            var_dump($clienteArray);
             die(); // matamos el proceso para no cargar la parte de mail
 
             //==================================================================
             // Proceso de carga de datos para el Mail
             //==================================================================
-
             $this->load->library('email');
             $config['protocol'] = 'sendmail';
             $config['charset'] = 'iso-8859-1';
@@ -39,13 +30,13 @@ class Mail extends CI_Controller {
 
             $this->email->clear(); // Reseteamos todas las variables de email a un estado vacio
             $this->email->from('hanselcolmenarez@hotmail.com', 'SolucionesPM-Prueba');
-            $this->email->to($row['email_cliente']);
+            $this->email->to($clienteArray[0]['email_cliente']);
             $this->email->subject('Reporte de Horas');
             $msg='
                 <div style="background-color:#CF9E2D; width: 600px; padding:10px; margin:auto; border: 2px solid #3A2919; border-top: 10px solid #3A2919;">
                 <h1 style="color:#fff; font-weight:bold;">Prueba de Envio de Email Snippet by Orellana</h1>    
-                <p style="margin-left:10px;color:#fff;">Customer: ' . $prepaidArray[0]['cliente'] . '</p>
-                <p style="margin-left:10px;color:#fff;">Email: ' . $prepaidArray[0]['email_cliente'] . '</p>      
+                <p style="margin-left:10px;color:#fff;">Customer: ' . $clienteArray[0]['cliente'] . '</p>
+                <p style="margin-left:10px;color:#fff;">Email: ' . $clienteArray[0]['email_cliente'] . '</p>      
                 </div>
             ';
             $this->email->message($msg);
