@@ -2,6 +2,22 @@
 
 class Mail extends CI_Controller {
 
+    public function createBalancePDF(){
+        $id = 2; // Id del Customer
+        $data['balance'] = $this->prepaid_model->get_prepaids($id, date('Y-m-d'));
+        $clienteArray = $this->clientes_model->get_clientes_single($id);
+
+        $this->load->library('pdf');
+        $mpdf = $this->pdf->load();        
+        $balancePDF = $this->load->view('tablaBalance', $data, true);
+        
+        $mpdf->SetHeader('Soluciones PM|'.date('Y-m-d').'|'.$clienteArray[0]['cliente'].'');
+        $mpdf->SetFooter('{PAGENO}');
+
+        $mpdf->WriteHTML($balancePDF);
+        $mpdf->Output();
+    }
+
     public function sendreport() {            
             $id = 2; // Id del Customer
             
@@ -10,11 +26,15 @@ class Mail extends CI_Controller {
             //==================================================================
             $prepaidDateNow = $this->prepaid_model->get_prepaids_dateNow($id, date("Y"), date("m"));
             $clienteArray = $this->clientes_model->get_clientes_single($id);
-            $balance = $this->prepaid_model->get_prepaids($id, date('Y-m-d'));
-
-            var_dump($prepaidDateNow);
-            var_dump($balance);
-            var_dump($clienteArray);
+            $data['balance'] = $this->prepaid_model->get_prepaids($id, date('Y-m-d'));
+        
+            //==================================================================
+            // Prueba de la vista del reporte de balance en PDF
+            //==================================================================
+            $balancePDF = $this->load->view('tablaBalance', $data, true);
+        
+            echo $balancePDF;
+           
             die(); // matamos el proceso para no cargar la parte de mail
 
             //==================================================================
