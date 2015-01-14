@@ -66,9 +66,7 @@ class Prepaid_model extends CI_Model {
                     ->from('prepaid')
                     ->where('MONTH(fecha_prepaid) =', $month)
                     ->where('YEAR(fecha_prepaid) =', $year)
-                    //->where('Fecha <=', $nextDate)
                     ->where_in('id_clientes',$client)
-                    //->or_where('ID_Cliente', 21)
                     ->where('horas !=', 0)
                     ->order_by('prepaid.fecha_prepaid', 'asc')
                     ->get();
