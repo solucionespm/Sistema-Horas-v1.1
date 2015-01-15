@@ -2,38 +2,50 @@
 
 class Mail extends CI_Controller {
 
-   public function createPDF($dataPDF,$nb_customer){
+   public function createBalancePDF($dataAllPDF,$nb_customer, $nb_report){
         $this->load->library('pdf');
         $mpdf = $this->pdf->load();
         $mpdf->SetHeader('Soluciones PM|'.date('Y-m-d').'|'.$nb_customer.'');
         $mpdf->SetFooter('{PAGENO}');
-        $mpdf->WriteHTML($dataPDF);        
-        $mpdf->Output('Balance_'.$nb_customer.'.pdf','D');
+        $mpdf->WriteHTML($dataAllPDF);        
+        $archivo =  'Balance_'.$nb_report.'_'.$nb_customer.'.pdf';
+        $mpdf->Output($archivo,'F');
+        return $archivo;
     }
+
     public function sendreport() {            
         $id = 2; // Id del Customer
 
         //==================================================================
         // Consultas a la BD
         //==================================================================
-        $prepaidMes['dataReporte'] = $this->prepaid_model->get_prepaids_dateNow($id, date("Y"), date("m"));        
+        $prepaidMes['dataReporte'] = $this->prepaid_model->get_prepaids_dateNow($id, date("Y"), date("m"));
         $clienteArray = $this->clientes_model->get_clientes_single($id);
         $reportAll['dataReporte'] = $this->prepaid_model->get_prepaids($id, date('Y-m-d'));
+
 
         //==================================================================
         // Prueba de la vista del reporte de balance en PDF
         //==================================================================
-        $balanceAllPDF = $this->load->view('tablaBalance_view', $reportAll, true);
-        $reportBalancePDF = $this->createPDF($balanceAllPDF, $clienteArray[0]['cliente']);
-        echo $reportBalancePDF;
-        
-        if($prepaidMes['dataReporte'] != ''){
-            $balanceMesPDF = $this->load->view('tablaBalance_view', $prepaidMes, true);
-            $reportBalanceMes = $this->createPDF($balanceMesPDF, $clienteArray[0]['cliente']);
-            echo $reportBalanceMes;
+        if(!empty($prepaidMes['dataReporte'])){
+            $nb_report = 'Mes';
+            $balanceMesPDF = $this->load->view('balanceMes_view', $prepaidMes, true);
+            $reportBalanceMes = $this->createBalancePDF($balanceMesPDF, $clienteArray[0]['cliente'], $nb_report);
+            $this->email->attach('rh/' . $attach);
         }
-die();
-
+        $nb_report = 'Final';
+        $balanceAllPDF = $this->load->view('tablaBalance_view', $reportAll, true);
+        $reportBalancePDF = $this->createBalancePDF($balanceAllPDF, $clienteArray[0]['cliente'], $nb_report);
+        $this->email->attach('rh/' . $attach);
+        
+        var_dump($reportBalanceMes); echo '<br>';
+        var_dump($reportBalancePDF);
+        die();
+        
+        if($attach!=''){
+            
+            
+        }
         //==================================================================
         // Proceso de carga de datos para el Mail
         //==================================================================

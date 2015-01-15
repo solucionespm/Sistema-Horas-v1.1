@@ -22,6 +22,13 @@
     <link rel="stylesheet" href="<?= base_url('assets/dialog/dialog.css'); ?>" />
     <link rel="stylesheet" href="<?= base_url('assets/dialog/dialog-jamie.css'); ?>" />
   <?php
+    }elseif($title=='Client'){
+      ?>
+    <link href="<?= base_url('assets/timepicker/jquery.datetimepicker.css'); ?>" rel="stylesheet">  
+    <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap-timepicker.min.css'); ?>" />
+    <link rel="stylesheet" href="<?= base_url('assets/dialog/dialog.css'); ?>" />
+    <link rel="stylesheet" href="<?= base_url('assets/dialog/dialog-jamie.css'); ?>" />
+  <?php  
     }
   ?>  
   
