@@ -9,7 +9,23 @@ class Cliente extends CI_Controller {
         $data['subtitle'] = 'Register';
         $data['icon'] = 'credit-card';
         $data['content'] = 'cliente';
-       
+        
+        $data['mensaje'] = "";
+        if(isset($_POST['saveLoad'])){
+
+            $client = $_POST['customer'];
+            $email = $_POST['email'];
+            $datos = array(
+                'cliente'           =>  $client,
+                'email_cliente'     =>  $email,
+                'status_clientes'   =>  1
+            );
+            $tabla = 'clientes';
+            $this->crud_model->agregar($tabla, $datos);
+            $data['mensaje'] = "Client have been loaded succesfully";
+        }
+        
+               
        $contentData = array(
             'datos' =>  ''
         );
@@ -18,8 +34,4 @@ class Cliente extends CI_Controller {
 
 		$this->load->view('template_view', $data);
 	}
-    
-    public function registerCliente(){
-        $this->load->helper('form');
-    }
 }
