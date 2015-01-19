@@ -119,6 +119,7 @@
               <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
                 <li><a href="<?= base_url('admin'); ?>"><i class="glyphicon glyphicon-user"></i> Dashboard</a></li>
                 <li><a href="<?= base_url('tasks'); ?>"><i class="glyphicon glyphicon-cog"></i> Tasks</a></li>
+                <li><a href="<?= base_url('cliente'); ?>"><i class="glyphicon glyphicon-cog"></i> Client</a></li>
                 <li><a href="#"><i class="glyphicon glyphicon-question-sign"></i> Help</a></li>
                 <li><a href="signin.html"><i class="glyphicon glyphicon-log-out"></i> Log Out</a></li>
               </ul>

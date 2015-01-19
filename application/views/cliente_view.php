@@ -30,7 +30,7 @@
                             <button name="saveLoad" type="submit" class="btn btn-default">Register</button>            
                         </div>
                       </form>
-                    <div class="clear"></div>
+                    <div class="clear"> <br> &nbsp; <br> </div>
                 </div>
             </div>
         </div>
