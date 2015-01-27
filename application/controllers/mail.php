@@ -8,7 +8,7 @@ class Mail extends CI_Controller {
         $mpdf->SetHeader('Soluciones PM|'.date('Y-m-d').'|'.$nb_customer.'');
         $mpdf->SetFooter('{PAGENO}');
         $mpdf->WriteHTML($dataAllPDF);        
-        $archivo =  'Balance_'.$nb_report.'_'.$nb_customer.'.pdf';
+        $archivo =  'temp/Balance_'.$nb_report.'_'.$nb_customer.'.pdf';
         $mpdf->Output($archivo,'F');
         return $archivo;
     }
@@ -23,29 +23,6 @@ class Mail extends CI_Controller {
         $clienteArray = $this->clientes_model->get_clientes_single($id);
         $reportAll['dataReporte'] = $this->prepaid_model->get_prepaids($id, date('Y-m-d'));
 
-
-        //==================================================================
-        // Prueba de la vista del reporte de balance en PDF
-        //==================================================================
-        if(!empty($prepaidMes['dataReporte'])){
-            $nb_report = 'Mes';
-            $balanceMesPDF = $this->load->view('balanceMes_view', $prepaidMes, true);
-            $reportBalanceMes = $this->createBalancePDF($balanceMesPDF, $clienteArray[0]['cliente'], $nb_report);
-            $this->email->attach('rh/' . $attach);
-        }
-        $nb_report = 'Final';
-        $balanceAllPDF = $this->load->view('tablaBalance_view', $reportAll, true);
-        $reportBalancePDF = $this->createBalancePDF($balanceAllPDF, $clienteArray[0]['cliente'], $nb_report);
-        $this->email->attach('rh/' . $attach);
-        
-        var_dump($reportBalanceMes); echo '<br>';
-        var_dump($reportBalancePDF);
-        die();
-        
-        if($attach!=''){
-            
-            
-        }
         //==================================================================
         // Proceso de carga de datos para el Mail
         //==================================================================
@@ -57,13 +34,37 @@ class Mail extends CI_Controller {
 
         $this->email->initialize($config);
 
+        //==================================================================
+        // Prueba de la vista del reporte de balance en PDF
+        //==================================================================
+        if(!empty($prepaidMes['dataReporte'])){
+            $nb_report = 'Mes';
+            $fecha = date('Y-m');            
+            $singleCliente = $this->clientes_model->get_clientes_single($id);
+            $data['customerName'] = $clienteArray[0]['cliente'];
+            $fechaArr = explode(' ',$fecha); 
+            $fechaArr = explode('-', $fechaArr[0]);
+            $year = $fechaArr[0];
+            $month = $fechaArr[1];
+            $dateFrom = $fecha . "-01";
+            $nextDate = $fecha . "-31";
+            $data['horas'] = $this->hours_model->get_hours($dateFrom, $nextDate, $id);
+            $mesT = strftime("%B",mktime(0, 0, 0, $month, 1, 2000));
+            $data['fecha'] = $mesT . ' ' . $fechaArr[0];
+            $balanceMesPDF = $this->load->view('ajax/loadhourdetail', $data, true);            
+            $reportBalanceMes = $this->createBalancePDF($balanceMesPDF, $clienteArray[0]['cliente'], $nb_report);
+            $this->email->attach($reportBalanceMes);            
+        }
+        $nb_report = 'Final';
+        $balanceAllPDF = $this->load->view('tablaBalance_view', $reportAll, true);
+        $reportBalancePDF = $this->createBalancePDF($balanceAllPDF, $clienteArray[0]['cliente'], $nb_report);
+        $this->email->attach($reportBalancePDF);
+
+
         $this->email->from('hanselcolmenarez@hotmail.com', 'SolucionesPM-Prueba');
-        $this->email->to($clienteArray[0]['email_cliente']);
+        $this->email->to('hanselcolmenarez@hotmail.com'); //$clienteArray[0]['email_cliente']
         $this->email->subject('Reporte de Horas');
 
-        if($attach!=''){
-            $this->email->attach('sp/' . $attach);
-        }
         $msg='
             <div style="background-color:#CF9E2D; width: 600px; padding:10px; margin:auto; border: 2px solid #3A2919; border-top: 10px solid #3A2919;">
             <h1 style="color:#fff; font-weight:bold;">Prueba de Envio de Email Snippet by Orellana</h1>    
@@ -72,9 +73,10 @@ class Mail extends CI_Controller {
             </div>
         ';
         $this->email->message($msg);
-        die(); // matamos el proceso para no cargar la parte de mail
         if ( ! $this->email->send()) {
             echo $this->email->print_debugger(); // Cambiar luego por return 'Error';
+        }else{
+            echo 'Email enviado Satisfactoriamente a' . $clienteArray[0]['email_cliente'];
         }
 	}
 }

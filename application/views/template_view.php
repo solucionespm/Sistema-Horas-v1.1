@@ -22,13 +22,6 @@
     <link rel="stylesheet" href="<?= base_url('assets/dialog/dialog.css'); ?>" />
     <link rel="stylesheet" href="<?= base_url('assets/dialog/dialog-jamie.css'); ?>" />
   <?php
-    }elseif($title=='Client'){
-      ?>
-    <link href="<?= base_url('assets/timepicker/jquery.datetimepicker.css'); ?>" rel="stylesheet">  
-    <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap-timepicker.min.css'); ?>" />
-    <link rel="stylesheet" href="<?= base_url('assets/dialog/dialog.css'); ?>" />
-    <link rel="stylesheet" href="<?= base_url('assets/dialog/dialog-jamie.css'); ?>" />
-  <?php  
     }
   ?>  
   
@@ -83,17 +76,16 @@
       
       <ul class="nav nav-pills nav-stacked nav-bracket">
         <li class="<?= ($title=='Dashboard')?'active':''; ?>"><a href="<?= base_url('admin'); ?>"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
-          <li class="<?= ($title=='Client')?'active':''; ?>"><a href="<?= base_url('cliente'); ?>"><i class="glyphicon glyphicon-user"></i> <span>Client</span></a></li>
+        <li class="<?= ($title=='Client')?'active':''; ?>"><a href="<?= base_url('cliente'); ?>"><i class="glyphicon glyphicon-user"></i> <span>Client</span></a></li>
         <li class="<?= ($title=='Tasks')?'active':''; ?>"><a href="<?= base_url('tasks'); ?>"><i class="fa fa-calendar"></i> <span>Tasks</span></a></li>
         <li class="nav-parent <?= ($title=='Prepaid')?'active':''; ?>"><a href="#"><i class="fa fa-credit-card"></i> <span>Prepaids</span></a>
           <ul class="children">
             <li class="<?= ($subtitle=='Hours')?'active':''; ?>"><a href="<?= base_url('prepaid/hours'); ?>"><i class="fa fa-caret-right"></i> Hours</a></li>
-            <li><a href="form-layouts.html"><i class="fa fa-caret-right"></i> Load</a></li>
           </ul>
         </li>
-        <li class="nav-parent"><a href="#"><i class="fa fa-print"></i> <span>Reports</span></a>
+        <li class="nav-parent <?= ($title=='Reports')?'active':''; ?>"><a href="#"><i class="fa fa-print"></i> <span>Reports</span></a>
           <ul class="children">
-            <li><a href="general-forms.html"><i class="fa fa-caret-right"></i> Hours</a></li>
+            <li class="<?= ($subtitle=='Reports Hours')?'active':''; ?>"><a href="<?= base_url('reports/list_hours'); ?>"><i class="fa fa-caret-right"></i> Hours</a></li>
             <li><a href="form-layouts.html"><i class="fa fa-caret-right"></i> Total</a></li>
             <li><a href="form-layouts.html"><i class="fa fa-caret-right"></i> Billing</a></li>
           </ul>
@@ -118,9 +110,9 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
-                <li><a href="<?= base_url('admin'); ?>"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li><a href="<?= base_url('tasks'); ?>"><i class="glyphicon glyphicon-cog"></i> Tasks</a></li>
+                <li><a href="<?= base_url('admin'); ?>"><i class="glyphicon glyphicon-user"></i> Dashboard</a></li>
                 <li><a href="<?= base_url('cliente'); ?>"><i class="glyphicon glyphicon-user"></i> Client</a></li>
+                <li><a href="<?= base_url('tasks'); ?>"><i class="glyphicon glyphicon-cog"></i> Tasks</a></li>
                 <li><a href="#"><i class="glyphicon glyphicon-question-sign"></i> Help</a></li>
                 <li><a href="signin.html"><i class="glyphicon glyphicon-log-out"></i> Log Out</a></li>
               </ul>
@@ -240,6 +232,68 @@ jQuery(document).ready(function(){
 				dlgtrigger.addEventListener( 'click', dlg.toggle.bind(dlg) );
 
 			})();
+});
+</script>
+<?php
+}elseif($title=='Reports'){
+?>
+<script src="<?= base_url('assets/js/bootstrap-timepicker.min.js'); ?>"></script>
+<script src="<?= base_url('assets/js/jquery.mousewheel.js'); ?>"></script>
+<script src="<?= base_url('assets/js/custom-reports.js'); ?>"></script>
+<script src="<?= base_url('assets/dialog/snap.svg-min.js'); ?>"></script>
+<script src="<?= base_url('assets/dialog/modernizr.custom.js'); ?>"></script>
+<script src="<?= base_url('assets/dialog/classie.js'); ?>"></script>
+<script src="<?= base_url('assets/dialog/dialogFx.js'); ?>"></script>
+<script>
+jQuery(document).ready(function(){
+        
+    jQuery('#fechaLoad').datepicker();
+    jQuery('#datepickerFrom').datepicker({
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 2,
+            onClose: function( selectedDate ) {
+            $( "#datepickerTo" ).datepicker( "option", "minDate", selectedDate );
+            }
+        });
+    jQuery('#datepickerTo').datepicker({
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 2,
+            onClose: function( selectedDate ) {
+            $( "#dateFrom" ).datepicker( "option", "maxDate", selectedDate );
+            }
+        });
+    
+//        (function() {
+//
+//            var dlgtrigger = document.querySelector( '[data-dialog]' ),
+//
+//                    somedialog = document.getElementById( dlgtrigger.getAttribute( 'data-dialog' ) ),
+//                    // svg..
+//                    morphEl = somedialog.querySelector( '.morph-shape' ),
+//                    s = Snap( morphEl.querySelector( 'svg' ) ),
+//                    path = s.select( 'path' ),
+//                    steps = { 
+//                            open : morphEl.getAttribute( 'data-morph-open' ),
+//                            close : morphEl.getAttribute( 'data-morph-close' )
+//                    },
+//                    dlg = new DialogFx( somedialog, {
+//                            onOpenDialog : function( instance ) {
+//                                    // animate path
+//                                    setTimeout(function() {
+//                                            path.stop().animate( { 'path' : steps.open }, 1500, mina.elastic );
+//                                    }, 250 );
+//                            },
+//                            onCloseDialog : function( instance ) {
+//                                    // animate path
+//                                    path.stop().animate( { 'path' : steps.close }, 250, mina.easeout );
+//                            }
+//                    } );
+//
+//            dlgtrigger.addEventListener( 'click', dlg.toggle.bind(dlg) );
+//
+//    })();
 });
 </script>
 <?php

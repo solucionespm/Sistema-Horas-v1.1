@@ -10,7 +10,7 @@ class Tasks extends CI_Controller {
             $conteo = $_POST['task'];
             foreach($conteo as $key => $c){
                 $fechaA = explode('/', $_POST['fecha'][$key]);
-                $fecha = $fechaA[2] . '-' . $fechaA[1] . '-' . $fechaA[0];
+                $fecha = $fechaA[2] . '-' . $fechaA[0] . '-' . $fechaA[1];
                 //12/03/2014    
                 $datos = array(
                     'id_tareas'     =>  $_POST['task'][$key],

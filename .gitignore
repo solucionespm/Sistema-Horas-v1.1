@@ -7,6 +7,3 @@ application/cache/*
 application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
-/nbproject/private/
-application/third_party/mpdf/ttfontdata/dejavuserifcondensedBI.cw.dat
-application/third_party/mpdf/ttfontdata/dejavuserifcondensedBI.mtx.php
