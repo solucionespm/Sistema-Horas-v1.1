@@ -5,14 +5,10 @@
      <div class="col-sm-12">
       <div class="panel panel-dark panel-alt">
           <div class="panel-heading">
-              <div class="panel-btns">
-                &nbsp;
-              </div><!-- panel-btns -->          
               <div><span style="font-size:12px;">CUSTOMER: <?= $customerName; ?></span></div>
               <div><span style="font-size:12px;">PERIOD: <?= $fecha; ?></span></div>
               <div align="center"><span style="font-size:14px; font-weight: bold;">Hour Detail Report</span></div>
         </div>
-        <div class="panel-body">
             <div class="table-responsive">
                 <table class="table mb30">
                     <thead>
@@ -83,7 +79,6 @@
                 </table>
             </div><!-- table-responsive -->
         </div>
-      </div><!-- panel -->
     </div><!-- col-sm-6 -->
 </div>
 </div>

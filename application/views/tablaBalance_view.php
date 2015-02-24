@@ -1,10 +1,7 @@
 <!-- Versión compilada y comprimida del CSS de Bootstrap -->
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <div style="font-family: sans-serif; ">
-<div class="panel-heading">
-    <div class="panel-btns">
-        &nbsp;
-    </div><!-- panel-btns -->          
+<div class="panel-heading">  
     <div><span style="font-size:12px;">CUSTOMER: <?= $customerName; ?></span>
     <div><span style="font-size:12px;">PERIOD: <?= $fecha; ?></span>
     <div align="center"><span style="font-size:14px; font-weight: bold;">Prepaid Hours Report</span></div>

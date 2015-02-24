@@ -12,10 +12,89 @@ class Mail extends CI_Controller {
         $mpdf->Output($archivo,'F');
         return $archivo;
     }
+    
+    public function createBalanceMesPDF($dataAllPDF,$nb_customer, $nb_report, $mes_nomb, $year){
+        $this->load->library('pdf');
+        $mpdf = $this->pdf->load();
+        $mpdf = new mPDF('c', 'A4-L');
+        $mpdf->SetHeader('|Soluciones PM||');
+        $mpdf->SetFooter('{PAGENO}');
+        $mpdf->WriteHTML($dataAllPDF);        
+        $archivo =  'temp/'.$nb_customer.'-'.$nb_report.'-'.$mes_nomb.'-'.$year.'.pdf'; 
+        $mpdf->Output($archivo,'F');
+        return $archivo;
+    }
+    
+    public function loadTableReportPrepaids($id, $fechaNew){        
+        $endDate = date("Y-m-01", strtotime("$fechaNew +1 month"));
+       // echo $endDate; die();
+        $prepaidArray = $this->prepaid_model->get_prepaids($id, $endDate);
+        $firstD = reset($prepaidArray);
+        $lastD = end($prepaidArray);
+
+        $start = $month = strtotime($firstD['fecha_prepaid']);
+        $end = strtotime($lastD['fecha_prepaid']);
+        $newPrepaidArray = array();
+        while($month <= $end)
+        {
+            //variables
+             $dateNumber = date('Y-m-01', $month);
+             $dateString = date('F Y', $month);
+             $nextMonth = date("Y-m-d", strtotime("+1 month", strtotime($dateNumber)));        
+             //get arrays of a certain month
+             $tempArray = array();
+             foreach($prepaidArray as $p){
+                    $theDate = date('Y-m-d', strtotime($p['fecha_prepaid']));
+
+                    if(($theDate >= $dateNumber) && ($theDate < $nextMonth)){
+                        array_push($tempArray, $p);
+                    }
+             }
+             ///from this month separate negative and positive array
+            $pos_arr=array(); $neg_arr=array();
+            foreach($tempArray as $val){
+                    ($val['horas']<0) ?  $neg_arr[]=$val : $pos_arr[]=$val;
+            }
+            ///add to new array positive values and add negatives
+            foreach($pos_arr as $p){
+                        array_push($newPrepaidArray, $p);
+            }
+            $negVal = 0;
+            foreach($neg_arr as $n){
+                      $negVal = $negVal - (-$n['horas']);
+            }
+            $negVal = number_format($negVal, 2, '.', '');
+            //negative array
+            if($negVal != 0){
+                    $negArray = array(
+                            'id_prepaid'    =>  0,
+                            'id_clientes'   =>  $id,
+                            'fecha_prepaid' =>  $dateNumber,
+                            'horas'     =>  $negVal,
+                            'id_bills'  =>  0
+                    );
+                    array_push($newPrepaidArray, $negArray);
+            }
+             //****************************************//
+             $month = strtotime("+1 month", $month);
+           }
+           $prepaidArray = $newPrepaidArray;
+           $data = array(
+                'customer'      =>  $id,
+                'endDate'       =>  $endDate,
+                'range'         =>  $rangeArray,
+                'fecha'         =>  $fechaNew,
+                'option'        =>  $option,
+                'prepaidData'   =>  $prepaidArray
+           );
+
+        return $data;        
+    }
 
     public function sendreport() {            
         $id = 95; // Id del Customer
         $fecha = '2014-07';//date('Y-m');
+        $fechaNew = date('Y-m-d');
         setlocale(LC_TIME, 'en_US');
         $date = explode("-",$fecha);
         $mes_nomb = strftime("%B",mktime(0, 0, 0, $date[1], 1, 2000));
@@ -68,72 +147,11 @@ class Mail extends CI_Controller {
                 $mesT = strftime("%B",mktime(0, 0, 0, $month, 1, 2000));
                 $data['fecha'] = $mesT . ' ' . $fechaArr[0];
                 $balanceMesPDF = $this->load->view('balanceMes_view', $data, true);            
-                $reportBalanceMes = $this->createBalancePDF($balanceMesPDF, $clienteArray[0]['cliente'], $nb_report, $mes_nomb, $year);
+                $reportBalanceMes = $this->createBalanceMesPDF($balanceMesPDF, $clienteArray[0]['cliente'], $nb_report, $mes_nomb, $year);
                 $this->email->attach($reportBalanceMes);            
             }
-            $nb_report = 'Balance';
-            $fechaNew = date('Y-m-d');
-            $endDate = date("Y-m-01", strtotime("$fechaNew +1 month"));
-           // echo $endDate; die();
-            $prepaidArray = $this->prepaid_model->get_prepaids($id, $endDate);
-            $firstD = reset($prepaidArray);
-            $lastD = end($prepaidArray);
-
-            $start = $month = strtotime($firstD['fecha_prepaid']);
-            $end = strtotime($lastD['fecha_prepaid']);
-            $newPrepaidArray = array();
-            while($month <= $end)
-            {
-                //variables
-                 $dateNumber = date('Y-m-01', $month);
-                 $dateString = date('F Y', $month);
-                 $nextMonth = date("Y-m-d", strtotime("+1 month", strtotime($dateNumber)));        
-                 //get arrays of a certain month
-                 $tempArray = array();
-                 foreach($prepaidArray as $p){
-                        $theDate = date('Y-m-d', strtotime($p['fecha_prepaid']));
-
-                        if(($theDate >= $dateNumber) && ($theDate < $nextMonth)){
-                            array_push($tempArray, $p);
-                        }
-                 }
-                 ///from this month separate negative and positive array
-                $pos_arr=array(); $neg_arr=array();
-                foreach($tempArray as $val){
-                        ($val['horas']<0) ?  $neg_arr[]=$val : $pos_arr[]=$val;
-                }
-                ///add to new array positive values and add negatives
-                foreach($pos_arr as $p){
-                            array_push($newPrepaidArray, $p);
-                }
-                $negVal = 0;
-                foreach($neg_arr as $n){
-                          $negVal = $negVal - (-$n['horas']);
-                }
-                $negVal = number_format($negVal, 2, '.', '');
-                //negative array
-                if($negVal != 0){
-                        $negArray = array(
-                                'id_prepaid'    =>  0,
-                                'id_clientes'   =>  $id,
-                                'fecha_prepaid' =>  $dateNumber,
-                                'horas'     =>  $negVal,
-                                'id_bills'  =>  0
-                        );
-                        array_push($newPrepaidArray, $negArray);
-                }
-                 //****************************************//
-                 $month = strtotime("+1 month", $month);
-               }
-               $prepaidArray = $newPrepaidArray;
-               $data = array(
-                    'customer'      =>  $id,
-                    'endDate'       =>  $endDate,
-                    'range'         =>  $rangeArray,
-                    'fecha'         =>  $fechaNew,
-                    'option'        =>  $option,
-                    'prepaidData'   =>  $prepaidArray
-               );
+            $nb_report = 'Balance';            
+            $data = $this->loadTableReportPrepaids($id, $fechaNew);
             //echo $this->load->view('ajax/loadtableprepaids', $data, true);
             $balanceAllPDF = $this->load->view('tablaBalance_view', $data, true);
             $reportBalancePDF = $this->createBalancePDF($balanceAllPDF, $clienteArray[0]['cliente'], $nb_report, $mes_nomb, $year);
@@ -142,7 +160,7 @@ class Mail extends CI_Controller {
             $this->email->from('gilberto@solucionespm.com', 'SolucionesPM-Prueba');
             $this->email->to('hanselcolmenarez@hotmail.com'); //$clienteArray[0]['email_cliente']
            // $this->email->cc('hanselcolmenarez@hotmail.com');
-            $this->email->subject('Reporte de Horas');
+            $this->email->subject($clienteArray[0]['cliente'].'-Balance-'.$mes_nomb.'-'.$year);
 
             $msg='
                 <div style="background-color:#CF9E2D; width: 600px; padding:10px; margin:auto; border: 2px solid #3A2919; border-top: 10px solid #3A2919;">
