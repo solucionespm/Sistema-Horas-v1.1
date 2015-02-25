@@ -157,7 +157,7 @@ class Mail extends CI_Controller {
             $reportBalancePDF = $this->createBalancePDF($balanceAllPDF, $clienteArray[0]['cliente'], $nb_report, $mes_nomb, $year);
             $this->email->attach($reportBalancePDF);
 
-            $this->email->from('gilberto@solucionespm.com', 'SolucionesPM-Prueba');
+            $this->email->from('administracion@solucionespm.com', 'SolucionesPM-Prueba');
             $this->email->to('hanselcolmenarez@hotmail.com'); //$clienteArray[0]['email_cliente']
            // $this->email->cc('hanselcolmenarez@hotmail.com');
             $this->email->subject($clienteArray[0]['cliente'].'-Balance-'.$mes_nomb.'-'.$year);
