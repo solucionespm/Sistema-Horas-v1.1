@@ -9,7 +9,7 @@ class Mail extends CI_Controller {
         $mpdf->SetFooter('{PAGENO}');
         $mpdf->WriteHTML($dataAllPDF);        
         $archivo =  'temp/'.$nb_customer.'-'.$nb_report.'-'.$mes_nomb.'-'.$year.'.pdf'; 
-        $mpdf->Output($archivo,'F');
+        $mpdf->Output($archivo);
         return $archivo;
     }
     
@@ -21,12 +21,12 @@ class Mail extends CI_Controller {
         $mpdf->SetFooter('{PAGENO}');
         $mpdf->WriteHTML($dataAllPDF);        
         $archivo =  'temp/'.$nb_customer.'-'.$nb_report.'-'.$mes_nomb.'-'.$year.'.pdf'; 
-        $mpdf->Output($archivo,'F');
+        $mpdf->Output($archivo);
         return $archivo;
     }
     
-    public function loadTableReportPrepaids($id, $fechaNew){        
-        $endDate = date("Y-m-01", strtotime("$fechaNew +1 month"));
+    public function loadTableReportPrepaids($id, $fecha){        
+        $endDate = date("Y-m-01", strtotime("$fecha +1 month"));
        // echo $endDate; die();
         $prepaidArray = $this->prepaid_model->get_prepaids($id, $endDate);
         $firstD = reset($prepaidArray);
@@ -82,9 +82,9 @@ class Mail extends CI_Controller {
            $data = array(
                 'customer'      =>  $id,
                 'endDate'       =>  $endDate,
-                'range'         =>  $rangeArray,
-                'fecha'         =>  $fechaNew,
-                'option'        =>  $option,
+                //'range'         =>  $rangeArray,
+                'fecha'         =>  $fecha,
+               // 'option'        =>  $option,
                 'prepaidData'   =>  $prepaidArray
            );
 
@@ -92,9 +92,9 @@ class Mail extends CI_Controller {
     }
 
     public function sendreport() {            
-        $id = 95; // Id del Customer
-        $fecha = '2014-07';//date('Y-m');
-        $fechaNew = date('Y-m-d');
+        $id = 2; // Id del Customer
+        $fecha = '2003-07';//date('Y-m');
+        //$fechaNew = date('Y-m-d');
         setlocale(LC_TIME, 'en_US');
         $date = explode("-",$fecha);
         $mes_nomb = strftime("%B",mktime(0, 0, 0, $date[1], 1, 2000));
@@ -151,7 +151,7 @@ class Mail extends CI_Controller {
                 $this->email->attach($reportBalanceMes);            
             }
             $nb_report = 'Balance';            
-            $data = $this->loadTableReportPrepaids($id, $fechaNew);
+            $data = $this->loadTableReportPrepaids($id, $fecha);
             //echo $this->load->view('ajax/loadtableprepaids', $data, true);
             $balanceAllPDF = $this->load->view('tablaBalance_view', $data, true);
             $reportBalancePDF = $this->createBalancePDF($balanceAllPDF, $clienteArray[0]['cliente'], $nb_report, $mes_nomb, $year);
