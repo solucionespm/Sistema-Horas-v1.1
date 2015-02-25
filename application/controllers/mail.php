@@ -97,7 +97,7 @@ class Mail extends CI_Controller {
         //$fechaNew = date('Y-m-d');
         setlocale(LC_TIME, 'en_US');
         $date = explode("-",$fecha);
-        $mes_nomb = strftime("%B",mktime(0, 0, 0, $date[1], 1, 2000));
+        $mes_nomb = strftime("%B",mktime(0, 0, 0, $date[1], 1, 2000));        
         $year = $date[0];
 
         //==================================================================
@@ -162,11 +162,15 @@ class Mail extends CI_Controller {
            // $this->email->cc('hanselcolmenarez@hotmail.com');
             $this->email->subject($clienteArray[0]['cliente'].'-Balance-'.$mes_nomb.'-'.$year);
 
+            setlocale(LC_TIME,"es_ES");setlocale(LC_TIME, 'spanish');
+            $mes_nomb_esp = strftime("%B",mktime(0, 0, 0, $date[1], 1, 2000));
+            
             $msg='
-                <div style="background-color:#CF9E2D; width: 600px; padding:10px; margin:auto; border: 2px solid #3A2919; border-top: 10px solid #3A2919;">
-                <h1 style="color:#fff; font-weight:bold;">Prueba de Envio de Email by Hansel Colmenarez</h1>    
-                <p style="margin-left:10px;color:#fff;">Customer: ' . $clienteArray[0]['cliente'] . '</p>
-                <p style="margin-left:10px;color:#fff;">Email: ' . $clienteArray[0]['email_cliente'] . '</p>      
+                <div>
+                <p>Estimado Cliente,</p>
+                <p>A continuaci&oacute;n le enviamos el reporte y balance de las horas de mantenimiento correspondientes al Mes de '.ucwords($mes_nomb_esp).' de '.$year .'.</p>
+                <p>Cualquier duda por favor nos avisa,</p>                 
+                <p>Saludos.</p>    
                 </div>
             ';
             $this->email->message($msg);
