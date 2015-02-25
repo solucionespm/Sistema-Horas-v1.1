@@ -9,19 +9,18 @@
               <div><span style="font-size:12px;">PERIOD: <?= $fecha; ?></span></div>
               <div align="center"><span style="font-size:14px; font-weight: bold;">Hour Detail Report</span></div>
         </div>
-            <div class="table-responsive">
-                <table class="table mb30">
+            <div>
+                <table class="table table-striped table table-bordered">
                     <thead>
                         <tr>
                             <th style="width: 100px; text-align: center;"><span style="font-size:12px;">User</span></th>
                             <th style="width: 100px; text-align: center;"><span style="font-size:12px;">Task</span></th>
                             <th style="width: 100px; text-align: center;"><span style="font-size:12px;">Subtask</span></th>
-                            <th style="width: 120px; text-align: center;"><span style="font-size:12px;">Detail</span></th>
-                            <th style="width: 100px; text-align: center;"><span style="font-size:12px;">Date</span></th>
-                            <th style="width: 100px; text-align: center;"><span style="font-size:12px;">Start</span></th>
-                            <th style="width: 100px; text-align: center;"><span style="font-size:12px;">End</span></th>
-                            <th style="width: 100px; text-align: center;"><span style="font-size:12px;">Total</span></th>
-                            <th></th>
+                            <th style="width: 700px; text-align: center;"><span style="font-size:12px;">Detail</span></th>
+                            <th style="width: 30px; text-align: center;"><span style="font-size:12px;">Date</span></th>
+                            <th style="width: 30px; text-align: center;"><span style="font-size:12px;">Start</span></th>
+                            <th style="width: 30px; text-align: center;"><span style="font-size:12px;">End</span></th>
+                            <th style="width: 30px; text-align: center;"><span style="font-size:12px;">Total</span></th>
                         </tr>
                      </thead>
                      <tbody class="tasksList">
@@ -37,23 +36,23 @@
                              <td style="width: 100px; text-align: center;">
                                  <span style="font-size:12px;"><?= $h['subtarea']; ?></span>
                              </td>
-                             <td style="width: 120px; text-align: center;">
+                             <td style="width: 700px; text-align: center;">
                                  <span style="font-size:12px;"><?= $h['detalle_horas']; ?></span>
                              </td>
-                             <td style="width: 100px; text-align: center;">
+                             <td style="width: 30px; text-align: center;">
                                <span style="font-size:12px;"><?php 
                                     $fechaA = explode('-', $h['fecha_horas']);
                                     $fecha = $fechaA[1] . '/' . $fechaA[2] . '/' . $fechaA[0];
                                     echo $fecha;
                                    ?></span>
                              </td>
-                             <td style="width: 100px; text-align: center;">
+                             <td style="width: 30px; text-align: center;">
                                  <span style="font-size:12px;"><?= substr($h['inicio_horas'], 0, -3); ?></span>
                              </td>
-                             <td style="width: 100px; text-align: center;">
+                             <td style="width: 30px; text-align: center;">
                                  <span style="font-size:12px;"><?= substr($h['fin_horas'], 0, -3); ?></span>
                              </td>
-                             <td style="width: 100px; text-align: center;">
+                             <td style="width: 30px; text-align: center;">
                                  <span style="font-size:12px;"><?php
                                     $ts1 = strtotime(str_replace('/', '-', '12/01/2014 ' . $h['inicio_horas']));
                                     $ts2 = strtotime(str_replace('/', '-', '12/01/2014 ' . $h['fin_horas']));
