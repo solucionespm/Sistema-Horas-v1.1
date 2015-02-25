@@ -9,7 +9,7 @@ class Mail extends CI_Controller {
         $mpdf->SetFooter('{PAGENO}');
         $mpdf->WriteHTML($dataAllPDF);        
         $archivo =  'temp/'.$nb_customer.'-'.$nb_report.'-'.$mes_nomb.'-'.$year.'.pdf'; 
-        $mpdf->Output($archivo);
+        $mpdf->Output($archivo, 'F');
         return $archivo;
     }
     
@@ -21,7 +21,7 @@ class Mail extends CI_Controller {
         $mpdf->SetFooter('{PAGENO}');
         $mpdf->WriteHTML($dataAllPDF);        
         $archivo =  'temp/'.$nb_customer.'-'.$nb_report.'-'.$mes_nomb.'-'.$year.'.pdf'; 
-        $mpdf->Output($archivo);
+        $mpdf->Output($archivo, 'F');
         return $archivo;
     }
     
