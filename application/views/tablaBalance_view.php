@@ -22,7 +22,7 @@
                 foreach($prepaidData as $h){
              ?>
              <tr>
-                 <td class="month" style="font-weight: bold; text-align: left;">
+                 <td class="month" style="text-align: left; font-size:12px;">
                     <?php
                      $fechaArr = explode(' ',$h['fecha_prepaid']); 
                      $fechaArr = explode('-', $fechaArr[0]);

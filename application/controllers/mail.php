@@ -92,8 +92,8 @@ class Mail extends CI_Controller {
     }
 
     public function sendreport() {            
-        $id = 2; // Id del Customer
-        $fecha = '2003-07';//date('Y-m');
+        $id = 95; // Id del Customer
+        $fecha = '2014-07';//date('Y-m');
         //$fechaNew = date('Y-m-d');
         setlocale(LC_TIME, 'en_US');
         $date = explode("-",$fecha);

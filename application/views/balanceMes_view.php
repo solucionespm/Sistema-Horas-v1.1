@@ -10,17 +10,17 @@
               <div align="center"><span style="font-size:14px; font-weight: bold;">Hour Detail Report</span></div>
         </div>
             <div>
-                <table class="table table-striped table table-bordered">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th style="width: 100px; text-align: center;"><span style="font-size:12px;">User</span></th>
                             <th style="width: 100px; text-align: center;"><span style="font-size:12px;">Task</span></th>
                             <th style="width: 100px; text-align: center;"><span style="font-size:12px;">Subtask</span></th>
-                            <th style="width: 700px; text-align: center;"><span style="font-size:12px;">Detail</span></th>
-                            <th style="width: 30px; text-align: center;"><span style="font-size:12px;">Date</span></th>
-                            <th style="width: 30px; text-align: center;"><span style="font-size:12px;">Start</span></th>
-                            <th style="width: 30px; text-align: center;"><span style="font-size:12px;">End</span></th>
-                            <th style="width: 30px; text-align: center;"><span style="font-size:12px;">Total</span></th>
+                            <th style="width: 600px; text-align: center;"><span style="font-size:12px;">Detail</span></th>
+                            <th style="width: 50px; text-align: center;"><span style="font-size:12px;">Date</span></th>
+                            <th style="width: 50px; text-align: center;"><span style="font-size:12px;">Start</span></th>
+                            <th style="width: 50px; text-align: center;"><span style="font-size:12px;">End</span></th>
+                            <th style="width: 50px; text-align: center;"><span style="font-size:12px;">Total</span></th>
                         </tr>
                      </thead>
                      <tbody class="tasksList">
@@ -36,7 +36,7 @@
                              <td style="width: 100px; text-align: center;">
                                  <span style="font-size:12px;"><?= $h['subtarea']; ?></span>
                              </td>
-                             <td style="width: 700px; text-align: center;">
+                             <td style="width: 700px; text-align: left;">
                                  <span style="font-size:12px;"><?= $h['detalle_horas']; ?></span>
                              </td>
                              <td style="width: 30px; text-align: center;">
@@ -57,7 +57,7 @@
                                     $ts1 = strtotime(str_replace('/', '-', '12/01/2014 ' . $h['inicio_horas']));
                                     $ts2 = strtotime(str_replace('/', '-', '12/01/2014 ' . $h['fin_horas']));
                                     $diff = abs($ts1 - $ts2) / 3600;
-                                    $diff = number_format($diff, 1, '.', '');
+                                    $diff = number_format($diff, 2, ':', '');
                                     echo $diff . ' Horas';
                                      ?></span>
                              </td>
@@ -70,7 +70,7 @@
                             <td colspan="7" style="width: 100px; text-align: right;"><span style="font-size:12px;">Total</span></td>
                             <td style="width: 100px; text-align: center;"> <span style="font-size:12px;">
                                 <?php
-                                echo number_format($total,2,",",".") . ' Horas';
+                                echo number_format($total,2,":",".") . ' Horas';
                                 ?></span>
                             </td>
                         </tr>
