@@ -91,7 +91,8 @@ class Mail extends CI_Controller {
         return $data;        
     }
 
-    public function sendreport() {            
+    public function sendreport() {
+        $user = 1;
         $id = 95; // Id del Customer
         $fecha = '2014-07';//date('Y-m');
         //$fechaNew = date('Y-m-d');
@@ -102,8 +103,7 @@ class Mail extends CI_Controller {
 
         //==================================================================
         // Consultas a la BD
-        //==================================================================
-        
+        //==================================================================        
         $clienteArray = $this->clientes_model->get_clientes_single($id);        
                     
         $reportAll['dataReporte'] = $this->prepaid_model->get_prepaids($id, date('Y-m-d'));
@@ -112,6 +112,12 @@ class Mail extends CI_Controller {
         // Proceso de carga de datos para el Mail
         //==================================================================        
         
+        if($user!='all'){
+            $singleUser = $this->users_model->get_user_name($user);
+            $data['nameUser'] = $singleUser[0]['nombres_usuarios'];
+        }else{
+            $data['nameUser'] = 'All Users';
+        }
         $data['customerName'] = $clienteArray[0]['cliente'];
         $fechaArr = explode(' ',$fecha);
         $fechaArr = explode('-', $fechaArr[0]);
@@ -152,23 +158,22 @@ class Mail extends CI_Controller {
             }
             $nb_report = 'Balance';            
             $data = $this->loadTableReportPrepaids($id, $fecha);
-            //echo $this->load->view('ajax/loadtableprepaids', $data, true);
             $balanceAllPDF = $this->load->view('tablaBalance_view', $data, true);
             $reportBalancePDF = $this->createBalancePDF($balanceAllPDF, $clienteArray[0]['cliente'], $nb_report, $mes_nomb, $year);
             $this->email->attach($reportBalancePDF);
 
-            $this->email->from('administracion@solucionespm.com', 'SolucionesPM-Prueba');
-            $this->email->to('hanselcolmenarez@hotmail.com'); //$clienteArray[0]['email_cliente']
-           // $this->email->cc('hanselcolmenarez@hotmail.com');
-            $this->email->subject($clienteArray[0]['cliente'].'-Balance-'.$mes_nomb.'-'.$year);
-
             setlocale(LC_TIME,"es_ES");setlocale(LC_TIME, 'spanish');
             $mes_nomb_esp = strftime("%B",mktime(0, 0, 0, $date[1], 1, 2000));
             
+            $this->email->from('administracion@solucionespm.com', 'SolucionesPM-Prueba');
+            $this->email->to('hanselcolmenarez@hotmail.com'); //$clienteArray[0]['email_cliente']
+           // $this->email->cc('hanselcolmenarez@hotmail.com');
+            $this->email->subject($clienteArray[0]['cliente'].' Balance '.$mes_nomb_esp.' '.$year);
+            
             $msg='
                 <div>
-                <p>Estimado Cliente,</p>
-                <p>A continuaci&oacute;n le enviamos el reporte y balance de las horas de mantenimiento correspondientes al Mes de '.ucwords($mes_nomb_esp).' de '.$year .'.</p>
+                <p>Estimado cliente,</p>
+                <p>A continuaci&oacute;n le enviamos el reporte y balance de las horas de mantenimiento correspondientes al Mes de '.$mes_nomb_esp.' de '.$year .'.</p>
                 <p>Cualquier duda por favor nos avisa,</p>                 
                 <p>Saludos.</p>    
                 </div>
