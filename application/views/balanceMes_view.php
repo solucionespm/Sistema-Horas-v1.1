@@ -13,10 +13,10 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th style="width: 100px; text-align: center;"><span style="font-size:12px;">User</span></th>
-                            <th style="width: 100px; text-align: center;"><span style="font-size:12px;">Task</span></th>
-                            <th style="width: 100px; text-align: center;"><span style="font-size:12px;">Subtask</span></th>
-                            <th style="width: 600px; text-align: center;"><span style="font-size:12px;">Detail</span></th>
+                            <th style="width: 50px; text-align: center;"><span style="font-size:12px;">User</span></th>
+                            <th style="width: 150px; text-align: center;"><span style="font-size:12px;">Task</span></th>
+                            <th style="width: 150px; text-align: center;"><span style="font-size:12px;">Subtask</span></th>
+                            <th style="width: 300px; text-align: center;"><span style="font-size:12px;">Detail</span></th>
                             <th style="width: 50px; text-align: center;"><span style="font-size:12px;">Date</span></th>
                             <th style="width: 50px; text-align: center;"><span style="font-size:12px;">Start</span></th>
                             <th style="width: 50px; text-align: center;"><span style="font-size:12px;">End</span></th>
