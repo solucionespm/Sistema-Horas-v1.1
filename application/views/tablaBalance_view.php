@@ -132,7 +132,7 @@
              </tr>
              <?php
                 }
-                $horas = $si . $hour .':'. $minu;
+                $horas = $si . $hour .':'. $minu; //Utilizado para mostrar Available Hours
              ?>
             <tr>
                 <td> &nbsp; </td>
