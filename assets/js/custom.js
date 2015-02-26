@@ -9,7 +9,6 @@ jQuery(window).load(function() {
 });
 
 jQuery(document).ready(function() {
-
    // Toggle Left Menu
    jQuery('.nav-parent > a').click(function() {
 

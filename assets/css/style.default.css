@@ -670,7 +670,7 @@ strong {
 }
 
 .pageheader .fa-file-text {
-	padding: 6px 10px;`
+	padding: 6px 10px;
 }
 
 .pageheader .fa-map-marker {
@@ -1131,7 +1131,6 @@ div.error label.error:before {
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
 	border-radius: 0;
-}
 }
 
 .tab-pane::after {
@@ -3874,3 +3873,11 @@ div.error label.error:before {
 }
 
 .clear {clear: both;display: block;overflow: hidden;visibility: hidden;width: 0;height: 0;}
+
+.checkall{
+        cursor: pointer;
+}
+
+.selects{
+        cursor: pointer;
+}
