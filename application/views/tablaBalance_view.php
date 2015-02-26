@@ -5,6 +5,48 @@
         <title></title>
         <link rel="stylesheet" href="<?= base_url('assets/bootstrap_reports/css/bootstrap-theme.min.css'); ?>" media="print" />
         <link rel="stylesheet" href="<?= base_url('assets/bootstrap_reports/css/bootstrap.min.css'); ?>"  media="print" />
+        <style>
+            table thead tr th, table tbody td{
+                padding: 4px;
+            }
+            h1, h2, h3, h4{
+                margin:0px;
+            }
+            
+            .panel25{
+                padding: 5px;
+                border: 1px solid #000;
+                display: block;
+                margin: 5px 0px;
+                width: 23%;
+            }
+            
+            .panel50{
+                padding: 5px;
+                border: 1px solid #000;
+                display: block;
+                margin: 5px 0px;
+                width: 48%;
+            }
+            
+            .panel75{
+                padding: 5px;
+                border: 1px solid #000;
+                display: block;
+                margin: 5px 0px;
+                width: 73%;
+            }
+            
+            .panel100{
+                padding: 5px;
+                border: 1px solid #000;
+                display: block;
+                margin: 5px 0px;
+                width: 98%;
+            }
+            
+            
+        </style>
     </head>
     <body>
         <div class="container-fluid">
@@ -33,7 +75,7 @@
                         foreach($prepaidData as $h){
                      ?>
                      <tr>
-                        <th scope="row"><?= $cont; ?></th>
+                        <th style="text-align: center;" scope="row"><?= $cont; ?></th>
                         <td class="month" style="text-align: left; font-size:12px;">
                             <?php
                              $fechaArr = explode(' ',$h['fecha_prepaid']); 

@@ -173,8 +173,8 @@ class Mail extends CI_Controller {
             $msg='
                 <div>
                 <p>Estimado cliente,</p>
-                <p>A continuaci&oacute;n le enviamos el reporte y balance de las horas de mantenimiento correspondientes al Mes de '.$mes_nomb_esp.' de '.$year .'.</p>
-                <p>Cualquier duda por favor nos avisa,</p>                 
+                <p>A continuaci&oacute;n le enviamos el reporte y balance de las horas de mantenimiento correspondientes al mes de '.$mes_nomb_esp.' de '.$year .'.</p>
+                <p>Quedamos a sus &oacute;rdenes para aclarar cualquier duda,</p>                 
                 <p>Saludos.</p>    
                 </div>
             ';
