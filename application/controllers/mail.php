@@ -27,16 +27,13 @@ class Mail extends CI_Controller {
     
     public function loadTableReportPrepaids($id, $fecha){        
         $endDate = date("Y-m-01", strtotime("$fecha +1 month"));
-       // echo $endDate; die();
         $prepaidArray = $this->prepaid_model->get_prepaids($id, $endDate);
         $firstD = reset($prepaidArray);
         $lastD = end($prepaidArray);
-
         $start = $month = strtotime($firstD['fecha_prepaid']);
         $end = strtotime($lastD['fecha_prepaid']);
         $newPrepaidArray = array();
-        while($month <= $end)
-        {
+        while($month <= $end) {
             //variables
              $dateNumber = date('Y-m-01', $month);
              $dateString = date('F Y', $month);
@@ -82,20 +79,16 @@ class Mail extends CI_Controller {
            $data = array(
                 'customer'      =>  $id,
                 'endDate'       =>  $endDate,
-                //'range'         =>  $rangeArray,
                 'fecha'         =>  $fecha,
-               // 'option'        =>  $option,
                 'prepaidData'   =>  $prepaidArray
-           );
-
+           );        
         return $data;        
     }
 
-    public function sendreport() {
+    public function sendreport() {  
         $user = 1;
-        $id = 95; // Id del Customer
-        $fecha = '2014-07';//date('Y-m');
-        //$fechaNew = date('Y-m-d');
+        $id = 2; // Id del Customer
+        $fecha = '2015-02'; // Fecha para el filtro de datos
         setlocale(LC_TIME, 'en_US');
         $date = explode("-",$fecha);
         $mes_nomb = strftime("%B",mktime(0, 0, 0, $date[1], 1, 2000));        
@@ -114,10 +107,12 @@ class Mail extends CI_Controller {
         
         if($user!='all'){
             $singleUser = $this->users_model->get_user_name($user);
-            $data['nameUser'] = $singleUser[0]['nombres_usuarios'];
+            $data['nameUser'] = $singleUser[0]['nombres_usuarios'];            
         }else{
             $data['nameUser'] = 'All Users';
         }
+        
+        
         $data['customerName'] = $clienteArray[0]['cliente'];
         $fechaArr = explode(' ',$fecha);
         $fechaArr = explode('-', $fechaArr[0]);
@@ -126,16 +121,17 @@ class Mail extends CI_Controller {
         $dateFrom = $fecha . "-01";
         $nextDate = $fecha . "-31";
         
+        // Validamos que exista un balance menor o mayor a 0 para poder enviar el reporte
         $data['horas'] = $this->hours_model->get_hours($dateFrom, $nextDate, $id);
         $horas = 0;     $i=0;
-        // Validamos que exista un balance menor o mayor a 0 para poder enviar el reporte
-        foreach($reportAll['dataReporte'] as $row){            
-            $fechaExplode = explode('-',$row['fecha_prepaid']);
-            $fechaCompara[$i] = $fechaExplode[0] .'-'. $fechaExplode[1];            
-            if(in_array($fecha,$fechaCompara)) $horas = $horas + (float)$row['horas'];
-            $i++;            
+        $dataB = $this->loadTableReportPrepaids($id, $fecha); // Datos que serviran para la vista y para la comparación de las horas activas    
+        $dataB['nameUser'] = $data['nameUser'];
+        $dataB['customerName'] = $data['customerName'];
+        foreach($dataB['prepaidData'] as $row){
+            $horas = $horas + (float)$row['horas'];            
+            $i++;
         }
-        
+  
         if($horas < 0 || $horas > 0){
             $this->load->library('email');
             $config['protocol'] = 'sendmail';
@@ -157,8 +153,8 @@ class Mail extends CI_Controller {
                 $this->email->attach($reportBalanceMes);            
             }
             $nb_report = 'Balance';            
-            $data = $this->loadTableReportPrepaids($id, $fecha);
-            $balanceAllPDF = $this->load->view('tablaBalance_view', $data, true);
+            //$data = $this->loadTableReportPrepaids($id, $fecha);
+            $balanceAllPDF = $this->load->view('tablaBalance_view', $dataB, true);
             $reportBalancePDF = $this->createBalancePDF($balanceAllPDF, $clienteArray[0]['cliente'], $nb_report, $mes_nomb, $year);
             $this->email->attach($reportBalancePDF);
 
@@ -179,11 +175,20 @@ class Mail extends CI_Controller {
                 </div>
             ';
             $this->email->message($msg);
+            $report['send'] = 1;
             if ( ! $this->email->send()) {
                 echo $this->email->print_debugger(); // Cambiar luego por return 'Error';
-            }else{
-                echo 'Email enviado Satisfactoriamente a ' . $clienteArray[0]['cliente'];
-            }
+            }else{                
+                echo $this->load->view('alertReport_view', $report, true); // Cambiar luego por return 'Error';
+            }            
+        }else{
+            $report['send'] = 0;
+        }
+        $report['cliente'] = $clienteArray[0]['cliente'];
+        if ($report['send'] == 0) {            
+            echo $this->load->view('alertReport_view', $report, true); // Cambiar luego por return 'Error';
+        }else{
+            echo $this->load->view('alertReport_view', $report, true); // Cambiar luego por return 'Error';
         }
 	}
 }
